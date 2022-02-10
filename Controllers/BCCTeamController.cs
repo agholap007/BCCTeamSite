@@ -79,10 +79,10 @@ namespace BCCTeamSite.Controllers
             pushpaFire.Players.AddRange(pushpaA.Select(x => x.Value.name));
 
 
-            int halfB = (filterAllBatter.Count() / 2)+1;
+            int halfB = (filterAllBatter.Count() / 2);
 
-            var rowdyB = filterAllBatter.Take(halfB);
-            var pushpaB = filterAllBatter.Skip(halfB);
+            var rowdyB = filterAllBatter.SkipLast(halfB);
+            var pushpaB = filterAllBatter.TakeLast(halfB);
 
             rowdyFells.Players.AddRange(rowdyB.Select(x => x.Value.name));
             pushpaFire.Players.AddRange(pushpaB.Select(x => x.Value.name));
