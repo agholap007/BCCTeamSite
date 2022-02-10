@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace BCCTeamSite.Controllers
 {
@@ -30,14 +31,33 @@ namespace BCCTeamSite.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetTeam")]
-        public IEnumerable<BCCTeam> Get()
+        [HttpGet(Name = "GetTeam/{all:string?}/{bat:string?")]
+        public IEnumerable<BCCTeam> Get(string? all="",string? bat="")
         {
+            List<string> removeAll = new List<string>();
+            if (!string.IsNullOrWhiteSpace(all))
+            {
+                removeAll = all.Split(new char[] {','}).ToList();
+            }
+
+            List<string> removeBat = new List<string>();
+            if (!string.IsNullOrWhiteSpace(all))
+            {
+                removeBat = bat.Split(new char[] { ',' }).ToList();
+            }
+
+
+            var filterAllRounders = _allrounders.Where(x => !removeAll.Contains(x.Value.name, StringComparer.OrdinalIgnoreCase));
+
             Random rand1 = new Random();
-            _allrounders = _allrounders.OrderBy(x => rand1.Next()).ToDictionary(item => item.Key, item => item.Value);
+            filterAllRounders = filterAllRounders.OrderBy(x => rand1.Next()).ToDictionary(item => item.Key, item => item.Value);
+
 
             Random rand2 = new Random();
-            _batsmans = _batsmans.OrderBy(x => rand2.Next()).ToDictionary(item => item.Key, item => item.Value);
+
+            var filterAllBatter = _batsmans.Where(x => !removeBat.Contains(x.Value.name, StringComparer.OrdinalIgnoreCase));
+
+            filterAllBatter = filterAllBatter.OrderBy(x => rand2.Next()).ToDictionary(item => item.Key, item => item.Value);
 
             var rowdyFells = new BCCTeam
             {
@@ -50,33 +70,22 @@ namespace BCCTeamSite.Controllers
                 TeamName = "Pushpa Fire",
                 Players = new List<string>(),
             };
-            int index = 0;
-            foreach(var allronder in _allrounders)
-            {
-                if(index <= 3)
-                {
-                    rowdyFells.Players.Add(allronder.Value.name);
-                }
-                else
-                {
-                    pushpaFire.Players.Add(allronder.Value.name);
-                }
-                index++;
-            }
+            int halfA = filterAllRounders.Count() / 2;
 
-            int index1 = 0;
-            foreach (var batsman in _batsmans)
-            {
-                if (index1 <= 0)
-                {
-                    rowdyFells.Players.Add(batsman.Value.name);
-                }
-                else
-                {
-                    pushpaFire.Players.Add(batsman.Value.name);
-                }
-                index1++;
-            }
+            var rowdyA = filterAllRounders.Take(halfA);
+            var pushpaA = filterAllRounders.Skip(halfA);
+
+            rowdyFells.Players.AddRange(rowdyA.Select(x=>x.Value.name));
+            pushpaFire.Players.AddRange(pushpaA.Select(x => x.Value.name));
+
+
+            int halfB = filterAllBatter.Count() / 2;
+
+            var rowdyB = filterAllBatter.Take(halfB);
+            var pushpaB = filterAllBatter.Skip(halfB);
+
+            rowdyFells.Players.AddRange(rowdyB.Select(x => x.Value.name));
+            pushpaFire.Players.AddRange(pushpaB.Select(x => x.Value.name));
 
             return new List<BCCTeam> { rowdyFells, pushpaFire };
         }
