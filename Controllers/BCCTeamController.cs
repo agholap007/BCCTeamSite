@@ -19,7 +19,7 @@ namespace BCCTeamSite.Controllers
         };
         Dictionary<string, (string name, int rating)> _batsmans = new Dictionary<string, (string, int)>
         {
-            {Guid.NewGuid().ToString(),("Venkey", 10) },
+            {Guid.NewGuid().ToString(),("Venky", 10) },
             {Guid.NewGuid().ToString(),("Sohail", 10) },
             {Guid.NewGuid().ToString(),("Nilesh", 10) },
         };
