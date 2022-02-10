@@ -12,7 +12,7 @@ namespace BCCTeamSite.Controllers
             {Guid.NewGuid().ToString(),("Paresh", 10) },
             {Guid.NewGuid().ToString(),("Atul", 10) },
             {Guid.NewGuid().ToString(),("Amit", 10) },
-            {Guid.NewGuid().ToString(),("Priam", 10) },
+            {Guid.NewGuid().ToString(),("Pritam", 10) },
             {Guid.NewGuid().ToString(),("Sayantan", 10) },
             {Guid.NewGuid().ToString(),("Anuj", 10) },
         };
@@ -22,11 +22,6 @@ namespace BCCTeamSite.Controllers
             {Guid.NewGuid().ToString(),("Sohail", 10) },
             {Guid.NewGuid().ToString(),("Nilesh", 10) },
         };
-
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
 
         private readonly ILogger<BCCTeamController> _logger;
 
@@ -38,13 +33,6 @@ namespace BCCTeamSite.Controllers
         [HttpGet(Name = "GetTeam")]
         public IEnumerable<BCCTeam> Get()
         {
-            //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            //{
-            //    Date = DateTime.Now.AddDays(index),
-            //    TemperatureC = Random.Shared.Next(-20, 55),
-            //    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            //})
-            //.ToArray();
             Random rand = new Random();
             _allrounders = _allrounders.OrderBy(x => rand.Next()).ToDictionary(item => item.Key, item => item.Value);
 
@@ -52,7 +40,7 @@ namespace BCCTeamSite.Controllers
 
             var rowdyFells = new BCCTeam
             {
-                TeamName = "Rowdy Fells",
+                TeamName = "Rowdy Fellas",
                 Players = new List<string>(),
             };
 
