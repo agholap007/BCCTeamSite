@@ -33,10 +33,11 @@ namespace BCCTeamSite.Controllers
         [HttpGet(Name = "GetTeam")]
         public IEnumerable<BCCTeam> Get()
         {
-            Random rand = new Random();
-            _allrounders = _allrounders.OrderBy(x => rand.Next()).ToDictionary(item => item.Key, item => item.Value);
+            Random rand1 = new Random();
+            _allrounders = _allrounders.OrderBy(x => rand1.Next()).ToDictionary(item => item.Key, item => item.Value);
 
-            _batsmans = _batsmans.OrderBy(x => rand.Next()).ToDictionary(item => item.Key, item => item.Value);
+            Random rand2 = new Random();
+            _batsmans = _batsmans.OrderBy(x => rand2.Next()).ToDictionary(item => item.Key, item => item.Value);
 
             var rowdyFells = new BCCTeam
             {
@@ -80,4 +81,5 @@ namespace BCCTeamSite.Controllers
             return new List<BCCTeam> { rowdyFells, pushpaFire };
         }
     }
+    
 }
