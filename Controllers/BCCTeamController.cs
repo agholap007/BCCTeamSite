@@ -31,19 +31,19 @@ namespace BCCTeamSite.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetTeam/{all:string?}/{bat:string?")]
-        public IEnumerable<BCCTeam> Get(string? all="",string? bat="")
+        [HttpGet(Name = "GetTeam/{skipAllrounder:string?}/{skipBatter:string?")]
+        public IEnumerable<BCCTeam> Get(string? skipAllrounder = "",string? skipBatter = "")
         {
             List<string> removeAll = new List<string>();
-            if (!string.IsNullOrWhiteSpace(all))
+            if (!string.IsNullOrWhiteSpace(skipAllrounder))
             {
-                removeAll = all.Split(new char[] {','}).ToList();
+                removeAll = skipAllrounder.Split(new char[] {','}).ToList();
             }
 
             List<string> removeBat = new List<string>();
-            if (!string.IsNullOrWhiteSpace(all))
+            if (!string.IsNullOrWhiteSpace(skipBatter))
             {
-                removeBat = bat.Split(new char[] { ',' }).ToList();
+                removeBat = skipBatter.Split(new char[] { ',' }).ToList();
             }
 
 
@@ -79,7 +79,7 @@ namespace BCCTeamSite.Controllers
             pushpaFire.Players.AddRange(pushpaA.Select(x => x.Value.name));
 
 
-            int halfB = filterAllBatter.Count() / 2;
+            int halfB = (filterAllBatter.Count() / 2)+1;
 
             var rowdyB = filterAllBatter.Take(halfB);
             var pushpaB = filterAllBatter.Skip(halfB);
