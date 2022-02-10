@@ -37,13 +37,13 @@ namespace BCCTeamSite.Controllers
             List<string> removeAll = new List<string>();
             if (!string.IsNullOrWhiteSpace(skipAllrounder))
             {
-                removeAll = skipAllrounder.Split(new char[] {','}).ToList();
+                removeAll = skipAllrounder.Split(new char[] {','}).Select(p=>p.Trim()).ToList();
             }
 
             List<string> removeBat = new List<string>();
             if (!string.IsNullOrWhiteSpace(skipBatter))
             {
-                removeBat = skipBatter.Split(new char[] { ',' }).ToList();
+                removeBat = skipBatter.Split(new char[] { ',' }).Select(p => p.Trim()).ToList();
             }
 
 
