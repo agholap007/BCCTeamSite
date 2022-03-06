@@ -32,7 +32,7 @@ namespace BCCTeamSite.Controllers
         }
 
         [HttpGet(Name = "GetTeam/{skipAllrounder:string?}/{skipBatter:string?/{notInSameTeam:string?")]
-        public IEnumerable<BCCTeam> Get(string? skipAllrounder = "",string? skipBatter = "", string? notInSameTeam="")
+        public IEnumerable<BCCTeam> Get(string? skipAllrounder = "",string? skipBatter = "", string? notInSameTeam="Sayantan,Anuj")
         {
             List<string> removeAll = new List<string>();
             if (!string.IsNullOrWhiteSpace(skipAllrounder))
