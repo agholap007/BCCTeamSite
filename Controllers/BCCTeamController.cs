@@ -31,8 +31,8 @@ namespace BCCTeamSite.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetTeam/{skipAllrounder:string?}/{skipBatter:string?")]
-        public IEnumerable<BCCTeam> Get(string? skipAllrounder = "",string? skipBatter = "")
+        [HttpGet(Name = "GetTeam/{skipAllrounder:string?}/{skipBatter:string?/{notInSameTeam:string?")]
+        public IEnumerable<BCCTeam> Get(string? skipAllrounder = "",string? skipBatter = "", string? notInSameTeam="")
         {
             List<string> removeAll = new List<string>();
             if (!string.IsNullOrWhiteSpace(skipAllrounder))
@@ -46,8 +46,15 @@ namespace BCCTeamSite.Controllers
                 removeBat = skipBatter.Split(new char[] { ',' }).Select(p => p.Trim()).ToList();
             }
 
+            List<string> notInSameTeamPlayers = new List<string>();
+            if (!string.IsNullOrWhiteSpace(notInSameTeam))
+            {
+                notInSameTeamPlayers = notInSameTeam.Split(new char[] { ',' }).Select(p => p.Trim()).ToList();
+            }
 
-            var filterAllRounders = _allrounders.Where(x => !removeAll.Contains(x.Value.name, StringComparer.OrdinalIgnoreCase));
+
+            var filterAllRounders = _allrounders.Where(x => !removeAll.Contains(x.Value.name, StringComparer.OrdinalIgnoreCase))
+                                                .Where(y=> !notInSameTeamPlayers.Contains(y.Value.name, StringComparer.OrdinalIgnoreCase));
 
             Random rand1 = new Random();
             filterAllRounders = filterAllRounders.OrderBy(x => rand1.Next()).ToDictionary(item => item.Key, item => item.Value);
@@ -70,6 +77,18 @@ namespace BCCTeamSite.Controllers
                 TeamName = "Pushpa Fire",
                 Players = new List<string>(),
             };
+
+            if (!string.IsNullOrWhiteSpace(notInSameTeam))
+            {
+                int halfNotSameTeam = notInSameTeamPlayers.Count() / 2;
+
+                var rowdyNotSameTeam = notInSameTeamPlayers.Take(halfNotSameTeam);
+                var pushpaNotSameTeam = notInSameTeamPlayers.Skip(halfNotSameTeam);
+
+                rowdyFells.Players.AddRange(rowdyNotSameTeam);
+                pushpaFire.Players.AddRange(pushpaNotSameTeam);
+            }
+
             int halfA = filterAllRounders.Count() / 2;
 
             var rowdyA = filterAllRounders.Take(halfA);
@@ -87,7 +106,21 @@ namespace BCCTeamSite.Controllers
             rowdyFells.Players.AddRange(rowdyB.Select(x => x.Value.name));
             pushpaFire.Players.AddRange(pushpaB.Select(x => x.Value.name));
 
-            return new List<BCCTeam> { rowdyFells, pushpaFire };
+            var rowdyFellsRandomzied = rowdyFells.Players.OrderBy(x => rand2.Next()).ToList<string>();
+            var pushpaFireRandomzied = pushpaFire.Players.OrderBy(x => rand1.Next()).ToList<string>();
+
+            return new List<BCCTeam> {
+            new BCCTeam
+            {
+                TeamName = "Rowdy Fellas",
+                Players = rowdyFellsRandomzied,
+            },
+                 new BCCTeam
+            {
+                TeamName = "Pushpa Fire",
+                Players = pushpaFireRandomzied,
+            } 
+            };
         }
     }
     
